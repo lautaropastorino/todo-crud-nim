@@ -1,6 +1,4 @@
 import std/times
-import std/strformat
-import marshal
 
 type
     Todo* = object
@@ -9,11 +7,11 @@ type
         description: string
         creation_date: DateTime
 
-proc newTodo*(title, description: string, creation_date: DateTime): Todo =
+proc newTodo*(title, description: string): Todo =
     Todo(
         title: title,
         description: description, 
-        creation_date: creation_date
+        creation_date: now()
     )
 
 proc get_title*(todo: Todo): string =
@@ -27,12 +25,6 @@ proc get_creation_date*(todo: Todo): DateTime =
 
 proc get_id*(todo: Todo): int = 
     todo.id
-
-proc to_string*(todo: Todo): string = 
-    &"{todo.title}:\n{todo.description}\n{todo.creation_date}"
-
-proc to_json*(todo: Todo): string = 
-    $$todo
 
 proc with_id*(todo: Todo, id: int): Todo =
     Todo(

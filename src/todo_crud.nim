@@ -1,6 +1,6 @@
 import std/asynchttpserver
 import std/asyncdispatch
-import ./todo_response
+import ./todo_service
 
 proc router(httpMethod: HttpMethod, path: string, req: Request) {.async, gcsafe.} =
   case httpMethod
@@ -8,20 +8,19 @@ proc router(httpMethod: HttpMethod, path: string, req: Request) {.async, gcsafe.
     case path
     of "/todos":
       echo "get 127.0.0.1:8080/todos"
-      await get_todos_response(req)
+      var todos_json = get_json_todos()
+      await req.respond(Http200, todos_json, newHttpHeaders({ "Content-Type": "application/json" }))
     #[ of "/home":
       echo "get 127.0.0.1:8080/home"
       # fetchInfoFromDatabase()
     else:
-      discard
+      discard]#
   of HttpPost:
     case path
-    of "/hello":
-      echo "post 127.0.0.1:8080/hello"
-      # login()
-    of "/home":
-      echo "post 127.0.0.1:8080/home"
-      # returnHome() ]#
+    of "/todos":
+      echo "post 127.0.0.1:8080/todos"
+      var post_result = post_todo(req)
+      await req.respond(Http204, post_result, newHttpHeaders({ "Content-Type": "application/json" }))
     else:
       discard
   else:
@@ -42,5 +41,6 @@ proc main {.async.} =
       # too many concurrent connections, `maxFDs` exceeded
       # wait 500ms for FDs to be closed
       await sleepAsync(500)
+
 
 waitFor main()

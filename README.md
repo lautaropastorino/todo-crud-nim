@@ -8,7 +8,13 @@ Devuelve un json con una lista de los *to-do* registrados
 
 > POST localhost:8080/todos 
 
-(próximamente)
+```
+{
+    "title": "Cargar nafta",
+    "description": "Llenar el tanque de nafta infinia"
+}
+```
+Inserta un *to-do* y devuelve el recurso creado
 
 > PATCH localhost:8080/todos 
 
